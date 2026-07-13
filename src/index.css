@@ -1,0 +1,10 @@
+@import "tailwindcss";
+:root {
+  --basic-font: "Instrument Sans", sans-serif;
+  --auth-bg-overlay: radial-gradient(circle at 30% 20%, #2a2550 0%, #0d0d1a 70%);
+}
+
+body {
+  font-family: var(--basic-font);
+  background-color: #070F2B;
+}
