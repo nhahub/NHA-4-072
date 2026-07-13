@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import HomePageSections from '../Components/HomePageSections'
+import Toast from '../Components/Toast'
+import { useAuth } from '../context/AuthContext'
 import {
   getFeaturedGames,
   getUpcomingGames,
@@ -15,12 +18,15 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 
 export default function HomePage() {
+  const navigate = useNavigate()
+  const { user, addToWishlist, addToCart, removeFromWishlist, isInWishlist } = useAuth()
   const [featuredGames, setFeaturedGames] = useState([])
   const [upcomingGames, setUpcomingGames] = useState([])
   const [trendingGames, setTrendingGames] = useState([])
   const [bestSellers, setBestSellers] = useState([])
   const [bestDeals, setBestDeals] = useState([])
   const [loading, setLoading] = useState(true)
+  const [toast, setToast] = useState(null)
 
   useEffect(() => {
     async function loadData() {
@@ -61,8 +67,34 @@ export default function HomePage() {
 
   const heroSlides = trendingGames
 
+  const handleBuyNow = (game) => {
+    if (!user) {
+      navigate('/login')
+      return
+    }
+
+    addToCart(game)
+    setToast({ message: `${game.name} added to cart.`, type: 'success' })
+  }
+
+  const handleWishlist = (game) => {
+    if (!user) {
+      navigate('/login')
+      return
+    }
+
+    if (isInWishlist(game.id)) {
+      removeFromWishlist(game.id)
+      setToast({ message: `${game.name} removed from wishlist.`, type: 'info' })
+    } else {
+      addToWishlist(game)
+      setToast({ message: `${game.name} added to wishlist.`, type: 'success' })
+    }
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 text-white">
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         
         {/* Hero slider section */}
@@ -125,12 +157,24 @@ export default function HomePage() {
                         ${slide.price || '49.99'}
                       </span>
                       
-                      <button className="w-full md:w-56 rounded-full bg-white py-3 px-8 font-bold text-slate-950 transition hover:bg-gray-200 text-center text-sm tracking-wide shadow-lg">
+                      <button
+                        type="button"
+                        onClick={() => handleBuyNow(slide)}
+                        className="w-full md:w-56 rounded-full bg-white py-3 px-8 font-bold text-slate-950 transition hover:bg-gray-200 text-center text-sm tracking-wide shadow-lg"
+                      >
                         Buy Now
                       </button>
                       
-                      <button className="w-full md:w-56 rounded-full border border-gray-600 bg-transparent py-3 px-8 font-medium text-white transition hover:bg-white/10 text-center text-sm tracking-wide">
-                        Add to Wishlist
+                      <button
+                        type="button"
+                        onClick={() => handleWishlist(slide)}
+                        className={`w-full md:w-56 rounded-full border border-gray-600 py-3 px-8 text-center text-sm font-medium tracking-wide transition ${
+                          isInWishlist(slide.id)
+                            ? 'bg-red-500/90 text-white hover:bg-red-500'
+                            : 'bg-transparent text-white hover:bg-white/10'
+                        }`}
+                      >
+                        {isInWishlist(slide.id) ? 'Remove from Wishlist' : 'Add to Wishlist'}
                       </button>
                     </div>
 
