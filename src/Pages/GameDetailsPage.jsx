@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { FaArrowLeft, FaStar, FaHeart, FaShoppingCart } from 'react-icons/fa'
+import { FaArrowLeft, FaStar, FaHeart, FaRegHeart, FaShoppingCart } from 'react-icons/fa'
 import { getGameDetails } from '../api/rawg'
 import { formatPrice, getGamePrice } from '../utils/gamePrice'
 import { useAuth } from '../context/AuthContext'
@@ -160,7 +160,11 @@ export default function GameDetailsPage() {
                       : 'bg-slate-800 text-white hover:bg-slate-700'
                   }`}
                 >
-                  <FaHeart fill={inWishlist ? 'currentColor' : 'none'} />
+                  {inWishlist ? (
+                    <FaHeart className="text-base" />
+                  ) : (
+                    <FaRegHeart className="text-base" />
+                  )}
                   {inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
                 </button>
               </div>
