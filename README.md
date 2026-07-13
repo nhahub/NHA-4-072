@@ -1,29 +1,31 @@
 # GameHub
 
-GameHub is a simple React + Vite project that displays games from the RAWG API. The app includes a home page with featured games, search, game categories, and a game details page.
+GameHub is a React + Vite storefront-style web app for browsing and discovering games. It pulls game data from the RAWG API and provides a polished experience for viewing featured titles, exploring categories, adding items to a wishlist or cart, and checking out.
 
 ## Features
 
-- Home page with a featured hero slider
-- Upcoming, trending, best seller, and best deal sections
-- Search for games by name
-- Game details page
-- Lazy loading for better performance
-- Simple and beginner-friendly React structure
+- Home page with a hero slider and curated game sections
+- Browse and search games by name
+- Category and platform filtering
+- Game details page with pricing and metadata
+- Wishlist and cart flows with local persistence
+- Authentication flow for login and registration
+- Responsive UI built with Tailwind CSS and React Icons
 
 ## Tech Stack
 
-- React
-- Vite
+- React 19
+- Vite 8
 - React Router DOM
 - Tailwind CSS
-- Axios
 - Swiper
+- Axios
 - React Icons
+- ESLint
 
 ## Project Structure
 
-```bash
+```text
 src/
 ├── api/
 │   └── rawg.js
@@ -31,48 +33,90 @@ src/
 │   ├── Footer.jsx
 │   ├── GameCard.jsx
 │   ├── HomePageSections.jsx
-│   └── NavBar.jsx
+│   ├── InputComponent.jsx
+│   ├── NavBar.jsx
+│   └── Toast.jsx
 ├── Pages/
-│   ├── AboutPage.jsx
 │   ├── BrowsePage.jsx
+│   ├── CartPage.jsx
 │   ├── Categories.jsx
+│   ├── CheckoutPage.jsx
+│   ├── CheckoutSuccessPage.jsx
 │   ├── GameDetailsPage.jsx
 │   ├── HomePage.jsx
+│   ├── LegalPage.jsx
 │   ├── loginPage.jsx
 │   ├── registerPage.jsx
-│   └── ShoppingCart.jsx
+│   ├── ShoppingCart.jsx
+│   └── WishlistPage.jsx
+├── context/
+│   └── AuthContext.jsx
+├── style/
+│   └── loginPage.css
+├── utils/
+│   └── gamePrice.js
 ├── App.jsx
 ├── main.jsx
 └── index.css
 ```
 
-## Installation
+## Getting Started
 
-1. Clone the repository
-2. Install dependencies
+1. Install dependencies:
 
 ```bash
 npm install
 ```
 
-3. Run the development server
+2. Start the development server:
 
 ```bash
 npm run dev
 ```
 
-## Build
+3. Open the local Vite URL shown in the terminal.
 
-To create a production build:
+## Available Scripts
 
-```bash
-npm run build
-```
+- `npm run dev` — start the development server
+- `npm run build` — create a production build
+- `npm run preview` — preview the production build locally
+- `npm run lint` — run ESLint checks
 
-## API
+## Routing Overview
 
-This project uses the RAWG API for game data.
+The app currently includes these main routes:
+
+- `/` — home page
+- `/browse` — game browsing page
+- `/categories` — categories page
+- `/game/:id` — game details
+- `/wishlist` — wishlist page
+- `/cart` — cart page
+- `/checkout` — checkout page
+- `/login` — login page
+- `/register` — registration page
+- `/terms` — terms of service
+- `/privacy` — privacy policy
+
+## Authentication and State
+
+User authentication and app state are managed through the context layer in [src/context/AuthContext.jsx](src/context/AuthContext.jsx). This handles:
+
+- login and registration
+- wishlist items
+- cart items
+- cart quantity updates
+- persistence through local storage
+
+## API Integration
+
+Game data is fetched from the RAWG API through [src/api/rawg.js](src/api/rawg.js). The module also includes local fallback data so the app can still render content if the API request fails.
+
+## Styling
+
+The UI uses Tailwind CSS and component-specific styling. Shared auth page styling is defined in [src/style/loginPage.css](src/style/loginPage.css).
 
 ## Notes
 
-The project is built in a simple way so it is easy to understand and suitable for learning React and Vite.
+This project is a frontend demo/storefront experience and is intended to be easy to extend. New pages, UI sections, or shopping flows can be added by following the existing component and context patterns.
